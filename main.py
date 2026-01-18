@@ -1,6 +1,8 @@
 import calendar
 import time
 from datetime import datetime
+import json
+from pathlib import Path
 
 from rich import box
 from rich.align import Align
@@ -11,6 +13,8 @@ from rich.panel import Panel
 from rich.progress import BarColumn, Progress, TextColumn
 from rich.table import Table
 from rich.text import Text
+
+TODO_FILE =  Path(__file__).with_name("todo.json")
 
 console = Console()
 
@@ -66,43 +70,33 @@ def create_time_panel():
     )
 
 
-def create_agenda_panel():
+def create_todo_panel():
     table = Table(show_header=False, box=None, padding=(0, 1))
     table.add_column()
+
+    def load_todo():
+        if TODO_FILE.exists():
+            return json.loads(TODO_FILE.read_text())
+        return []
+
+    tasks = load_todo()
     
-    # Change to json file
-    tasks = [
-        "• Work on dashboard",
-        "• Exercise"
-    ]
-    
-    for task in tasks:
-        table.add_row(task)
+    for i, task in enumerate(tasks, 1):
+        status = "✓" if task["done"] else " "
+        table.add_row(Text(f"{i}. {task['task']} {status}"))
     
     return Panel(
         table,
-        title="AGENDA",
+        title="TO DO",
         border_style="orange3",
         padding=(1, 1)
     )
 
 
-def create_done_panel():
-    table = Table(show_header=False, box=None, padding=(0, 1))
-    table.add_column()
-    
-    # Change to json file
-    finished_tasks = [
-        "• Read",
-        "• Practise piano"
-    ]
-    
-    for task in finished_tasks:
-        table.add_row(task)
-    
+def create_timetable_panel():
     return Panel(
-        table,
-        title="DONE",
+        "timetable",
+        title="TIMETABLE",
         border_style="orange3",
         padding=(1, 1)
     )
@@ -115,8 +109,7 @@ def create_currently_panel():
         TextColumn("{task.percentage:.1f}%")
     )
 
-    reading_progress.add_task("[italic]The Iliad[/]", completed=406, total=429)
-    reading_progress.add_task("[italic]The Great Gatsby[/]", completed=0, total=150)
+    reading_progress.add_task("[italic]The Great Gatsby[/]", completed=10, total=150)
 
     currently_content = Group(
         Text("Reading:", style="light_goldenrod3"),
@@ -126,12 +119,25 @@ def create_currently_panel():
         Text("The Nat King Cole Story", style="italic"),
         Text(""),
         Text("Working on:", style="light_goldenrod3"),
-        Text("Brushing up my coding skills")
+        Text("Various projects")
     )
 
     return Panel(
         currently_content,
         title="CURRENTLY",
+        border_style="orange3",
+        padding=(1, 1)
+    )
+
+
+def create_pica_panel():
+    pica_content = Group(
+        Text("        Pica:", style="bold light_goldenrod3"),
+        Text("(>'')>  You are going to win Monopoly Deal today!")
+    )
+
+    return Panel(
+        pica_content,
         border_style="orange3",
         padding=(1, 1)
     )
@@ -161,6 +167,7 @@ def create_dashboard():
     layout.split_column(
         Layout(name="header", size=5),
         Layout(name="body"),
+        Layout(name="bottom", size=6),
         Layout(name="footer", size=3)
     )
 
@@ -178,10 +185,10 @@ def create_dashboard():
         Layout(name="right")
     )
     
-    layout["left"].split_column(
-        Layout(create_agenda_panel()),
-        Layout(create_done_panel())
+    layout["left"].split_row(
+        Layout(create_timetable_panel()),
     )
+      
  
     layout["mid"].split_column(
         Layout(create_calendar_panel()),
@@ -190,7 +197,12 @@ def create_dashboard():
     )
     
     layout["right"].split_column(
-        Layout(create_currently_panel())
+        Layout(create_currently_panel()),
+        Layout(create_todo_panel())
+    )
+
+    layout["bottom"].update(
+        create_pica_panel()
     )
 
     layout["footer"].update(
