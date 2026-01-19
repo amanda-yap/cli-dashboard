@@ -15,6 +15,7 @@ from rich.table import Table
 from rich.text import Text
 
 TODO_FILE =  Path(__file__).with_name("todo.json")
+EVENTS_FILE =  Path(__file__).with_name("events.json")
 
 console = Console()
 
@@ -49,7 +50,7 @@ def create_calendar_panel():
             if index in (5, 6): # Different colour for weekends
                 day_label.stylize("light_yellow3")
             if day and (day, month, year) == today_tuple:
-                day_label.stylize("white on dark_red")
+                day_label.stylize("light_yellow3 on dark_red")
             days.append(day_label)
         table.add_row(*days)
 
@@ -81,9 +82,9 @@ def create_todo_panel():
 
     tasks = load_todo()
     
-    for i, task in enumerate(tasks, 1):
+    for task in tasks:
         status = "✓" if task["done"] else " "
-        table.add_row(Text(f"{i}. {task['task']} {status}"))
+        table.add_row(Text(f"- {task['task']} {status}"))
     
     return Panel(
         table,
@@ -109,7 +110,7 @@ def create_currently_panel():
         TextColumn("{task.percentage:.1f}%")
     )
 
-    reading_progress.add_task("[italic]The Great Gatsby[/]", completed=10, total=150)
+    reading_progress.add_task("[italic]The Great Gatsby[/]", completed=20, total=153)
 
     currently_content = Group(
         Text("Reading:", style="light_goldenrod3"),
@@ -130,10 +131,32 @@ def create_currently_panel():
     )
 
 
+def create_upcoming_panel():
+    table = Table(show_header=False, box=None, padding=(0, 1))
+    table.add_column(header="event")
+    table.add_column(header="date")
+
+    def load_events():
+        if EVENTS_FILE.exists():
+            return json.loads(EVENTS_FILE.read_text())
+        return []
+
+    events = load_events()
+    
+    for event in events:
+        table.add_row(Text(f"- {event['event']}"), Text(event['date'], style="light_goldenrod3"))
+    
+    return Panel(
+        table,
+        title="UPCOMING",
+        border_style="orange3",
+        padding=(1, 1)
+    )
+
 def create_pica_panel():
     pica_content = Group(
         Text("        Pica:", style="bold light_goldenrod3"),
-        Text("(>'')>  You are going to win Monopoly Deal today!")
+        Text("(>'')>  Hello, friend!")
     )
 
     return Panel(
@@ -152,6 +175,25 @@ def create_ascii_panel():
       '-:_      )  / `' '=.
         ) >     {_/,     /~)
 snd     |/               `^ .'
+    """
+    
+    return Panel(
+        Align.center(ascii_art),
+        border_style="orange3",
+        padding=(1, 1)
+    )
+
+def create_ascii_panel_2():
+
+    ascii_art = r"""
+
+
+   |\---/|
+   | ,_, |
+    \_`_/-..----.
+ ___/ `   ' ,""+ \  sk
+(__...'   __\    |`.___.';
+  (_,...'(_,.`__)/'.....+
     """
     
     return Panel(
@@ -185,8 +227,9 @@ def create_dashboard():
         Layout(name="right")
     )
     
-    layout["left"].split_row(
-        Layout(create_timetable_panel()),
+    layout["left"].split_column(
+        Layout(create_todo_panel()),
+        Layout(create_ascii_panel_2())
     )
       
  
@@ -198,7 +241,7 @@ def create_dashboard():
     
     layout["right"].split_column(
         Layout(create_currently_panel()),
-        Layout(create_todo_panel())
+        Layout(create_upcoming_panel())
     )
 
     layout["bottom"].update(
