@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 import json
 from pathlib import Path
+import getpass
 
 from rich import box
 from rich.align import Align
@@ -14,8 +15,11 @@ from rich.progress import BarColumn, Progress, TextColumn
 from rich.table import Table
 from rich.text import Text
 
+
 TODO_FILE =  Path(__file__).with_name("todo.json")
 EVENTS_FILE =  Path(__file__).with_name("events.json")
+CURRENTLY_FILE =  Path(__file__).with_name("currently.json")
+
 
 console = Console()
 
@@ -104,23 +108,32 @@ def create_timetable_panel():
 
 
 def create_currently_panel():
+
+    def load_current():
+        if CURRENTLY_FILE.exists():
+            return json.loads(CURRENTLY_FILE.read_text())
+        return {}
+
+    current_data = load_current()
+
     reading_progress = Progress(
         TextColumn("{task.description}"),
         BarColumn(complete_style="light_goldenrod3", style="light_yellow3", bar_width=15),
         TextColumn("{task.percentage:.1f}%")
     )
 
-    reading_progress.add_task("[italic]The Great Gatsby[/]", completed=20, total=153)
+    for book in current_data["books"]:
+        reading_progress.add_task(book["name"], completed = book["pages_read"], total = book["total_pages"])
 
     currently_content = Group(
         Text("Reading:", style="light_goldenrod3"),
         reading_progress,
         Text(""),
         Text("Listening to:", style="light_goldenrod3"),
-        Text("The Nat King Cole Story", style="italic"),
+        Text(f"{current_data["music"]}", style="italic"),
         Text(""),
         Text("Working on:", style="light_goldenrod3"),
-        Text("Various projects")
+        Text(f"{current_data["working_on"]}")
     )
 
     return Panel(
@@ -153,14 +166,14 @@ def create_upcoming_panel():
         padding=(1, 1)
     )
 
-def create_pica_panel():
-    pica_content = Group(
-        Text("        Pica:", style="bold light_goldenrod3"),
+def create_picca_panel():
+    picca_content = Group(
+        Text("        Picca:", style="bold light_goldenrod3"),
         Text("(>'')>  Hello, friend!")
     )
 
     return Panel(
-        pica_content,
+        picca_content,
         border_style="orange3",
         padding=(1, 1)
     )
@@ -209,13 +222,12 @@ def create_dashboard():
     layout.split_column(
         Layout(name="header", size=5),
         Layout(name="body"),
-        Layout(name="bottom", size=6),
-        Layout(name="footer", size=3)
+        Layout(name="footer", size=6)
     )
 
     layout["header"].update(
         Panel(
-            Align.center("[bold] Welcome, Amanda [/bold]"),
+            Align.center(f"[bold]{getpass.getuser()}'s dashboard [/bold]"),
             border_style="orange3",
             padding=(1)
         )
@@ -244,15 +256,8 @@ def create_dashboard():
         Layout(create_upcoming_panel())
     )
 
-    layout["bottom"].update(
-        create_pica_panel()
-    )
-
     layout["footer"].update(
-        Panel(
-            "[dim]Ctrl+C to exit[/dim]",
-            border_style="orange3"
-        )
+        create_picca_panel()
     )
 
     return layout
