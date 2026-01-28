@@ -19,9 +19,12 @@ def create_upcoming_panel():
         return []
 
     events = load_events()
-    
-    for event in events:
-        table.add_row(Text(f"- {event['event']}"), Text(event['date'], style="light_goldenrod3"))
+
+    if len(events) == 0:
+        table.add_row(Text("No upcoming events.", style="light_goldenrod3"))
+    else:
+        for event in events:
+            table.add_row(Text(f"- {event['event']}"), Text(event['date'], style="light_goldenrod3"))
     
     return Panel(
         table,

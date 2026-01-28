@@ -17,10 +17,13 @@ def create_todo_panel():
         return []
 
     tasks = load_todo()
-    
-    for task in tasks:
-        status = "✓" if task["done"] else " "
-        table.add_row(Text(f"- {task['task']} {status}"))
+
+    if len(tasks) == 0:
+        table.add_row(Text("No tasks.", style="light_goldenrod3"))
+    else:
+        for task in tasks:
+            status = "✓" if task["done"] else " "
+            table.add_row(Text(f"- {task['task']} {status}"))
     
     return Panel(
         table,
