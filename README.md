@@ -15,3 +15,4 @@ A personal dashboard run from the command line, made using Python and Rich.
 
 Dashboard data can be updated in `data/todo.json`, `data/currently.json`, and `data/events.json`
 
+You can install the dashboard using pipx by running `pipx install --e .` Afterwards, the dashboard can be run in the command line simply by typing `dashboard`

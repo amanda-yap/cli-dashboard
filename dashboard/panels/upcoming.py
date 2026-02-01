@@ -6,7 +6,8 @@ from rich.text import Text
 from rich.panel import Panel
 
 
-EVENTS_FILE = Path(__file__).parent.parent / "data" / "events.json"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+EVENTS_FILE = PROJECT_ROOT / "data" / "events.json"
 
 def create_upcoming_panel():
     table = Table(show_header=False, box=None, padding=(0, 1))

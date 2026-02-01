@@ -7,7 +7,9 @@ from rich.panel import Panel
 from rich.progress import BarColumn, Progress, TextColumn
 
 
-CURRENTLY_FILE = Path(__file__).parent.parent / "data" / "currently.json"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CURRENTLY_FILE = PROJECT_ROOT / "data" / "currently.json"
+
 
 def create_currently_panel():
     def load_current():

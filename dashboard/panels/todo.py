@@ -5,7 +5,8 @@ from rich.table import Table
 from rich.text import Text
 from rich.panel import Panel
 
-TODO_FILE = Path(__file__).parent.parent / "data" / "todo.json"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+TODO_FILE = PROJECT_ROOT / "data" / "todo.json"
 
 def create_todo_panel():
     table = Table(show_header=False, box=None, padding=(0, 1))

@@ -1,7 +1,7 @@
 from rich.layout import Layout
-from layout.left import create_left_column
-from layout.mid import create_mid_column
-from layout.right import create_right_column
+from dashboard.layout.left import create_left_column
+from dashboard.layout.mid import create_mid_column
+from dashboard.layout.right import create_right_column
 
 
 def create_body():

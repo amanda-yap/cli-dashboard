@@ -1,6 +1,6 @@
 from rich.layout import Layout
-from panels.currently import create_currently_panel
-from panels.upcoming import create_upcoming_panel
+from dashboard.panels.currently import create_currently_panel
+from dashboard.panels.upcoming import create_upcoming_panel
 
 
 def create_right_column():

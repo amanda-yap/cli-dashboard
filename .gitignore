@@ -1,5 +1,6 @@
 __pycache__
 .DS_Store
+dashboard.egg-info
 
 currently.json
 todo.json
