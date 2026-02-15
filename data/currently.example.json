@@ -1,0 +1,16 @@
+{
+    "books": [
+        {
+            "name": "A Tale of Two Cities",
+            "pages_read": 98,
+            "total_pages": 364
+        },
+        {
+            "name": "Animal Farm",
+            "pages_read": 35,
+            "total_pages": 93
+        }  
+    ],
+    "music": "Nocturne Op. 62, No. 1 - Chopin",
+    "working_on": "Customising my dashboard"
+}

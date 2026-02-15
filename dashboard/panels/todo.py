@@ -13,9 +13,16 @@ def create_todo_panel():
     table.add_column()
 
     def load_todo():
-        if TODO_FILE.exists():
-            return json.loads(TODO_FILE.read_text())
-        return []
+        try:
+            if TODO_FILE.exists():
+                return json.loads(TODO_FILE.read_text())
+            else:
+                raise FileNotFoundError(
+                    "File not found. Make sure you have copied data/todo.example.json to data/todo.json."
+                )
+        except json.JSONDecodeError:
+            print("Invalid JSON formatting.")
+            return []
 
     tasks = load_todo()
 

@@ -15,9 +15,16 @@ def create_upcoming_panel():
     table.add_column(header="date")
 
     def load_events():
-        if EVENTS_FILE.exists():
-            return json.loads(EVENTS_FILE.read_text())
-        return []
+        try:
+            if EVENTS_FILE.exists():
+                return json.loads(EVENTS_FILE.read_text())
+            else:
+                raise FileNotFoundError(
+                    "File not found. Make sure you have copied data/events.example.json to events/todo.json."
+                )
+        except json.JSONDecodeError:
+            print("Invalid JSON formatting.")
+            return []
 
     events = load_events()
 

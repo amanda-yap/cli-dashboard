@@ -13,9 +13,15 @@ CURRENTLY_FILE = PROJECT_ROOT / "data" / "currently.json"
 
 def create_currently_panel():
     def load_current():
-        if CURRENTLY_FILE.exists():
-            return json.loads(CURRENTLY_FILE.read_text())
-        return {}
+        try:
+            if CURRENTLY_FILE.exists():
+                return json.loads(CURRENTLY_FILE.read_text())
+            else:
+                raise FileNotFoundError(
+                    "File not found. Make sure you have copied data/currently.example.json to currently/todo.json."
+                )
+        except json.JSONDecodeError:
+            print("Invalid JSON formatting.")
 
     current_data = load_current()
 
