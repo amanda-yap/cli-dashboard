@@ -6,7 +6,7 @@ from rich.text import Text
 def create_picca_panel():
     picca_content = Group(
         Text("        Picca:", style="bold light_goldenrod3"),
-        Text("(>'')>  Hello, friend!")
+        Text("(>'')>  YOU GOT THIS")
     )
 
     return Panel(
