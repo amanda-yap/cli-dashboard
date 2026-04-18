@@ -10,6 +10,7 @@ A personal dashboard run from the command line, made using Python and Rich.
 - Live clock
 - Current activities
 - Upcoming events
+- Goals
 - ASCII art
 - Motivation from Picca
 
@@ -25,7 +26,7 @@ A personal dashboard run from the command line, made using Python and Rich.
 The dashboard can now be run anywhere in the command line, simply by running the command `dashboard`.
 
 ### Editing the dashboard
-- Example json files have been provided in the `data` folder and should be copied or renamed to `todo.json`, `currently.json`, and `events.json` before running the dashboard.
-- Dashboard data can be updated in `data/todo.json`, `data/currently.json`, and `data/events.json`. Make sure to follow the formatting of the example files.
+- Example json files have been provided in the `data` folder and should be copied or renamed to `todo.json`, `currently.json`, `events.json`, and `goals.json` before running the dashboard.
+- Dashboard data can be updated in `data/todo.json`, `data/currently.json`, `data/events.json`, and `data/goals.json`. Make sure to follow the formatting of the example files.
 
 `Ctrl+C` to close the dashboard.
